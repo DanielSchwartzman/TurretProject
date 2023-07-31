@@ -5,3 +5,6 @@ An interactive and engaging project that combines facial recognition and robotic
 
 ## Note:
 The project is divided into two parts, the Python code and Arduino code(Which can be found under "Arduino" folder)
+
+
+# Work in progress
