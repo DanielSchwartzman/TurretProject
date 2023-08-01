@@ -4,7 +4,7 @@ import time
 import cv2
 import math
 
-arduino = serial.Serial('COM5', 9600)
+arduino = serial.Serial('COM6', 9600)
 
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
@@ -33,44 +33,51 @@ while True:
         )
 
         # Find the closest face to the camera
-        dist = 1000
-        closest_x = 640
-        closest_y = 480
-        for(x, y, width, height) in faces:
-            current_distance = distance(x+width/2, y+height/2)
-            if dist > current_distance:
-                dist = current_distance
-                closest_x = x+width/2
-                closest_y = y+height/2
+        if faces.__sizeof__() > 0:
+            dist = 1000
+            closest_x = 320
+            closest_y = 240
+            for(x, y, width, height) in faces:
+                current_distance = distance(x+width/2, y+height/2)
+                if dist > current_distance:
+                    dist = current_distance
+                    closest_x = x+width/2
+                    closest_y = y+height/2
 
-        x_on_target = False
-        y_on_target = False
-
-        # Check if the closest face X coordinate is at the middle of the screen
-        if closest_x > 330:
             x_on_target = False
-            arduino.write('1'.encode())
-        elif closest_x < 310:
-            x_on_target = False
-            arduino.write('2'.encode())
-        else:
-            x_on_target = True
-
-        # Check if the closest face Y coordinate is at the middle of the screen
-        if closest_y > 250:
             y_on_target = False
-            arduino.write('3'.encode())
-        elif closest_y < 230:
-            y_on_target = False
-            arduino.write('4'.encode())
-        else:
-            y_on_target = True
 
-        # Check if current camera position is aiming exactly at a persons face
-        if x_on_target & y_on_target:
-            arduino.write('0'.encode())
+            # Check if the closest face X coordinate is at the middle of the screen
+            if closest_x < 310:
+                x_on_target = False
+                if dist > 100:
+                    arduino.write('1'.encode())
+                else:
+                    arduino.write('2'.encode())
+            elif closest_x > 330:
+                x_on_target = False
+                if dist > 100:
+                    arduino.write('3'.encode())
+                else:
+                    arduino.write('4'.encode())
+            else:
+                x_on_target = True
 
-        cv2.imshow('video', frame)
+            # Check if the closest face Y coordinate is at the middle of the screen
+            if closest_y < 230:
+                y_on_target = False
+                arduino.write('5'.encode())
+            elif closest_y > 250:
+                y_on_target = False
+                arduino.write('6'.encode())
+            else:
+                y_on_target = True
+
+            # Check if current camera position is aiming exactly at a persons face
+            if x_on_target & y_on_target:
+                arduino.write('0'.encode())
+
+        cv2.imshow('Turret view', frame)
         time.sleep(0.1)
 
     key = cv2.waitKey(1)
