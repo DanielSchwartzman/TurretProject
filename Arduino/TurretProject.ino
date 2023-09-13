@@ -1,6 +1,6 @@
 #include <Servo.h>
 
-int num;
+int serialInput;
 Servo horizontalServo;
 Servo verticalServo;
 int horizontalDeg = 90;
@@ -21,8 +21,8 @@ void loop()
 {
   if(Serial.available())
   {
-    num = Serial.read() - 48;
-    switch(num)
+    serialInput = Serial.read() - 48;
+    switch(serialInput)
     {
       case 1:
       {
