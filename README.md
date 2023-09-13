@@ -5,7 +5,7 @@ An interactive and engaging project that combines facial recognition and robotic
 
 ## Instruction:
 Upload the Arduino code from the "Arduino" directory to your arduino, connect any camera device to your computer and simply launch
-the Python code.
+the Python program.
 
 ## Note:
 The project is divided into two parts, the Python code and Arduino code(Which can be found under "Arduino" folder)
